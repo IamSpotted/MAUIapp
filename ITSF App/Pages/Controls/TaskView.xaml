@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+    Border Styling:
+    - Defines a rounded rectangle shape with a corner radius of 20
+    - Background color adapts based on the current app theme 
+-->
+<Border
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:effectsView="clr-namespace:Syncfusion.Maui.Toolkit.EffectsView;assembly=Syncfusion.Maui.Toolkit"
+    xmlns:pageModels="clr-namespace:ITSF_App.PageModels"
+    xmlns:models="clr-namespace:ITSF_App.Models"
+    xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
+    x:Class="ITSF_App.Pages.Controls.TaskView"
+    StrokeShape="RoundRectangle 20"
+    Background="{AppThemeBinding Light={StaticResource LightSecondaryBackground}, Dark={StaticResource DarkSecondaryBackground}}"
+    x:DataType="models:ProjectTask">
+
+    
+    <!-- 
+        Effect View:
+        - Adds a highlight effect when the user taps on the item
+        - The highlight background color adapts to the current theme
+    -->
+    <effectsView:SfEffectsView
+        TouchDownEffects="Highlight"
+        HighlightBackground="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}">
+        <!-- 
+            Shimmer Effect:
+            - Displays a loading animation while data is being fetched
+            - Uses transparent background for seamless integration
+            - Expands to fill available space
+            - Binds to IsBusy to toggle shimmer effect dynamically
+        -->
+        <shimmer:SfShimmer
+            BackgroundColor="Transparent"
+            VerticalOptions="FillAndExpand"               
+            IsActive="{Binding IsBusy, Source={RelativeSource AncestorType={x:Type pageModels:IProjectTaskPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}">
+            <!-- 
+                Skeleton UI for Shimmer Loading Effect:
+                - Grid layout with two columns (one for an icon, one for text)
+                - Uses BoxView elements to simulate loading placeholders
+            -->
+            <shimmer:SfShimmer.CustomView>
+                <Grid 
+                    ColumnDefinitions="Auto,*"
+                    Padding="{OnIdiom 15, Desktop=20}">
+                    <BoxView 
+                        WidthRequest="24"
+                        HeightRequest="24"
+                        Margin="12, 0"
+                        Style="{StaticResource ShimmerCustomViewStyle}"/>
+                    <BoxView 
+                        Grid.Column="1"
+                        HeightRequest="24"
+                        Margin="12, 0"
+                        Style="{StaticResource ShimmerCustomViewStyle}"/>
+                </Grid>
+            </shimmer:SfShimmer.CustomView>
+
+            <!-- 
+                Task Display Content:
+                - Grid layout with two columns (checkbox + task title)
+                - Includes tap gesture for navigation to task details
+            -->
+            <shimmer:SfShimmer.Content>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="15" Padding="{OnIdiom 15, Desktop=20}">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer 
+                            Command="{Binding NavigateToTaskCommand, Source={RelativeSource AncestorType={x:Type pageModels:IProjectTaskPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}" 
+                            CommandParameter="{Binding .}"/>
+                    </Grid.GestureRecognizers>
+                    <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted, Mode=OneTime}" VerticalOptions="Center" CheckedChanged="CheckBox_CheckedChanged"/>
+                    <Label Grid.Column="1" Text="{Binding Title}" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                </Grid>
+            </shimmer:SfShimmer.Content>
+        </shimmer:SfShimmer>
+    </effectsView:SfEffectsView>
+</Border>

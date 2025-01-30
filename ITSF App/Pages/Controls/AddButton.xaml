@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+    This XAML File is linked to ITSF_App.Pages.Controls.Addbutton
+    Image source is the image to display on the button
+    Background color is pulled from the apps primary color theme
+    rounded corners with R30 to make button circular
+    button size is 60x60 which makes it circular
+    positions button in the bottom right corner of the window
+    adds space around the button, ensuring it's not right against the screen edge
+-->
+<Button xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ITSF_App.Pages.Controls.AddButton"
+    ImageSource="{StaticResource IconAdd}" 
+    BackgroundColor="{StaticResource Primary}" 
+    CornerRadius="30" 
+    HeightRequest="60" 
+    WidthRequest="60" 
+    VerticalOptions="End" 
+    HorizontalOptions="End"
+    Margin="30" />

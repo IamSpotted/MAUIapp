@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Border xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+        xmlns:controls="clr-namespace:ITSF_App.Pages.Controls"
+        xmlns:models="clr-namespace:ITSF_App.Models"
+        xmlns:fonts="clr-namespace:Fonts"
+        xmlns:pageModels="clr-namespace:ITSF_App.PageModels"
+        xmlns:shimmer="clr-namespace:Syncfusion.Maui.Toolkit.Shimmer;assembly=Syncfusion.Maui.Toolkit"
+        x:Class="ITSF_App.Pages.Controls.ProjectCardView"
+        Style="{StaticResource CardStyle}"
+        x:DataType="models:Project">
+
+    <!--- Shimmer effect to show loading state while data is being fetched and/or processed -->    
+    <shimmer:SfShimmer
+        BackgroundColor="Transparent"
+        VerticalOptions="FillAndExpand"
+        IsActive="{Binding IsBusy, Source={RelativeSource AncestorType={x:Type pageModels:MainPageModel}}, x:DataType=pageModels:IProjectTaskPageModel}">
+
+        <!-- Custom view displayed during the loading/shimmer state -->
+        <shimmer:SfShimmer.CustomView>
+            <VerticalStackLayout Spacing="15">
+                <!-- BoxView elements styled to create a shimmer effect with varying sizes. Rounded corners for the shimmer boxes -->
+                <BoxView 
+                    CornerRadius="48"
+                    WidthRequest="24"
+                    HeightRequest="24"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    Style="{StaticResource ShimmerCustomViewStyle}"/>
+                <BoxView 
+                    HeightRequest="24"
+                    Style="{StaticResource ShimmerCustomViewStyle}"/>
+                <BoxView 
+                    HeightRequest="48"
+                    Style="{StaticResource ShimmerCustomViewStyle}"/>
+                <BoxView 
+                    HeightRequest="24"
+                    Margin="0, 12"
+                    Style="{StaticResource ShimmerCustomViewStyle}"/>
+            </VerticalStackLayout>
+        </shimmer:SfShimmer.CustomView>
+
+        <!-- Content that will be displayed once the loading is completed -->
+        <shimmer:SfShimmer.Content>
+            <VerticalStackLayout Spacing="15">
+                <!-- Image to represent the project or task icon -->
+                <Image HorizontalOptions="Start" Aspect="Center">
+                    <Image.Source>
+                        <!-- Binding the icon from the model -->
+                        <FontImageSource 
+                    Glyph="{Binding Icon}" 
+                    FontFamily="{x:Static fonts:FluentUI.FontFamily}" 
+                    Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+                    Size="{StaticResource IconSize}"/>
+                    </Image.Source>
+                </Image>
+
+                <!-- Label displaying the name of the project or task -->
+                <Label Text="{Binding Name}" TextColor="{StaticResource Gray400}" FontSize="14" TextTransform="Uppercase"/>
+
+                <!-- Label displaying the description of the project or task -->
+                <Label Text="{Binding Description}" LineBreakMode="WordWrap"/>
+
+                <!-- HorizontalStackLayout to display tags associated with the project -->
+                <HorizontalStackLayout Spacing="15" BindableLayout.ItemsSource="{Binding Tags}">
+                    <BindableLayout.ItemTemplate>
+                        <!-- Template for each tag displayed in the horizontal stack -->
+                        <DataTemplate x:DataType="models:Tag">
+                            <!-- Custom view for displaying tags -->
+                            <controls:TagView />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </shimmer:SfShimmer.Content>
+    </shimmer:SfShimmer>
+</Border>
